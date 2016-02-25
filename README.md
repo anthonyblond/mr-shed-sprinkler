@@ -7,6 +7,10 @@ Unlikely to be of interest to anyone else
 1. Clone into /home/pi/mr-shed-sprinkler
 2. Make sure rpi.gpio python package is installed `sudo pip install rpi-gpio`. Should be already installed on Raspbian
 3. Ensure 'at' is installed: `sudo apt-get install at` (needed for water_for)
+4. Add symlinks:
+  1. `sudo ln -s /home/pi/mr-shed-sprinkler/init_sprinkler /usr/bin/init_sprinkler`
+  2. `sudo ln -s /home/pi/mr-shed-sprinkler/sprinkler /usr/bin/sprinkler`
+  3. `sudo ln -s /home/pi/mr-shed-sprinkler/water_for /usr/bin/water_for`
 
 ## Usage
 ### init_sprinkler
