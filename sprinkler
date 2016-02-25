@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+
+import RPi.GPIO as GPIO
+import time
+import sys
+import datetime
+
+###############
+# CONSTANTS
+###############
+PIN_LAWN = 11
+
+ZONE_ALL  = "all"
+ZONE_LAWN = "lawn"
+
+ACTION_ON = "on"
+ACTION_OFF = "off"
+
+###############
+# FUNCTION DEFS
+###############
+def log(msg):
+	now = datetime.datetime.now()
+	str = now.strftime("%Y-%m-%d %H:%M") + " >> " + msg
+	print str
+	open("/var/log/sprinkler.log","a").write(str + "\n")
+
+###############
+# RUN-TIME
+###############
+
+# Avoid warnings 
+GPIO.setwarnings(False)
+
+# to use Raspberry Pi board pin numbers
+GPIO.setmode(GPIO.BOARD)
+
+# Set up relevant GPIO channels
+GPIO.setup(PIN_LAWN, GPIO.OUT)
+
+# ARGUMENTS
+if (len(sys.argv) != 3):
+	print "Invalid number of arguments"
+	print "Should be ./sprinkler ZONE ACTION"
+	sys.exit()
+
+zone = str(sys.argv[1])
+action = str(sys.argv[2])
+
+if (zone == ZONE_ALL):
+	if (action == ACTION_ON):
+		print "Invalid, cannot turn on all zones, only turn all off"
+	elif (action == ACTION_OFF):
+		log("Turning ALL sprinklers OFF")
+		GPIO.output(PIN_LAWN,GPIO.LOW)
+		#GPIO.output(PIN_GARDEN_A,GPIO.LOW)
+		#GPIO.output(PIN_GARDEN_B,GPIO.LOW)	
+	else:
+		print "Invalid action \"" + action + "\""
+elif (zone == ZONE_LAWN):
+	if (action == ACTION_ON):
+		log("Turning LAWN sprinklers ON")
+		GPIO.output(PIN_LAWN,GPIO.HIGH)
+		
+	elif (action == ACTION_OFF):
+		log("Turning LAWN sprinklers OFF")
+		GPIO.output(PIN_LAWN,GPIO.LOW)
+	else:
+		print "Invalid action \"" + action + "\""
+else:
+	# Invalid zone
+	print "Invalid zone \"" + zone + "\""
+
+sys.stdout.flush()

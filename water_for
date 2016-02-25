@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Calls the sprinkler program to first turn a zone off, and then schedule it turning off again after duration time. If the scheduling produces an error, the watering does not occur
+
+MAX_DURATION=20
+
+# ARGUMENTS
+if [ $# -ne 2 ]
+then
+	echo "Invalid number of arguments"
+	echo "Should be ./water_for ZONE DURATION (min)"
+	exit -1
+fi
+
+
+# DO IT
+echo "/usr/bin/sprinkler $1 off" | at now + $2 min && /usr/bin/sprinkler $1 on

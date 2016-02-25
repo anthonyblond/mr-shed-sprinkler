@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+import RPi.GPIO as GPIO
+import time
+import sys
+import datetime
+
+###############
+# CONSTANTS
+###############
+PIN_LAWN = 11
+PIN_GARDEN_A = 13
+PIN_GARDEN_B = 15
+
+###############
+# FUNCTION DEFS
+###############
+def log(msg):
+	now = datetime.datetime.now()
+	str = now.strftime("%Y-%m-%d %H:%M") + " >> " + msg
+	print str
+	open("/var/log/sprinkler.log","a").write(str + "\n")
+
+###############
+# RUN-TIME
+###############
+
+# Avoid warnings 
+GPIO.setwarnings(False)
+
+# to use Raspberry Pi board pin numbers
+GPIO.setmode(GPIO.BOARD)
+
+log("Initialising sprinkler system");
+
+# Set up relevant GPIO channels
+GPIO.setup(PIN_LAWN, GPIO.OUT)
+GPIO.setup(PIN_GARDEN_A, GPIO.OUT)
+GPIO.setup(PIN_GARDEN_B, GPIO.OUT)
+
+GPIO.output(PIN_LAWN,GPIO.LOW);
+GPIO.output(PIN_GARDEN_A,GPIO.LOW);
+GPIO.output(PIN_GARDEN_B,GPIO.LOW);
+
+log("Init complete, everything should be off");
+
+sys.stdout.flush()
+sys.exit(0);
