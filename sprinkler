@@ -4,10 +4,10 @@ import RPi.GPIO as GPIO
 import time
 import sys
 import datetime
+import os
+from ConfigParser import SafeConfigParser
 
-###############
 # CONSTANTS
-###############
 PIN_LAWN = 11
 
 ZONE_ALL  = "all"
@@ -16,14 +16,17 @@ ZONE_LAWN = "lawn"
 ACTION_ON = "on"
 ACTION_OFF = "off"
 
-###############
+# CONFIG
+config = SafeConfigParser()
+config.read(os.path.dirname(os.path.realpath(__file__)) + '/config.ini')
+
 # FUNCTION DEFS
-###############
 def log(msg):
 	now = datetime.datetime.now()
 	str = now.strftime("%Y-%m-%d %H:%M") + " >> " + msg
 	print str
-	open("/var/log/sprinkler.log","a").write(str + "\n")
+	open(config.get('logging','log_file'),"a").write(str + "\n")
+
 
 ###############
 # RUN-TIME
