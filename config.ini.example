@@ -1,4 +1,4 @@
 ; Rename this file to config.ini, changing as needed
 
 [logging]
-log_file=/home/pi/sprinker.log
+log_file=/home/pi/sprinkler.log
