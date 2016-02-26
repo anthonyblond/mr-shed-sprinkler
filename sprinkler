@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as GPIO
+from mr_shed_output import output, init
 import time
 import sys
 import datetime
@@ -8,13 +8,12 @@ import os
 from ConfigParser import SafeConfigParser
 
 # CONSTANTS
-PIN_LAWN = 11
+OUTPUT_NUM_MAP = {
+	"lawn": 2,
+	"garden_a": 3,
+	"garden_b": 4,
+}
 
-ZONE_ALL  = "all"
-ZONE_LAWN = "lawn"
-
-ACTION_ON = "on"
-ACTION_OFF = "off"
 
 # CONFIG
 config = SafeConfigParser()
@@ -32,14 +31,7 @@ def log(msg):
 # RUN-TIME
 ###############
 
-# Avoid warnings 
-GPIO.setwarnings(False)
-
-# to use Raspberry Pi board pin numbers
-GPIO.setmode(GPIO.BOARD)
-
-# Set up relevant GPIO channels
-GPIO.setup(PIN_LAWN, GPIO.OUT)
+init()
 
 # ARGUMENTS
 if (len(sys.argv) != 3):
@@ -50,26 +42,21 @@ if (len(sys.argv) != 3):
 zone = str(sys.argv[1])
 action = str(sys.argv[2])
 
-if (zone == ZONE_ALL):
-	if (action == ACTION_ON):
+if (zone == 'all'):
+	if (action == 'on'):
 		print "Invalid, cannot turn on all zones, only turn all off"
-	elif (action == ACTION_OFF):
+	elif (action == 'off'):
 		log("Turning ALL sprinklers OFF")
-		GPIO.output(PIN_LAWN,GPIO.LOW)
-		#GPIO.output(PIN_GARDEN_A,GPIO.LOW)
-		#GPIO.output(PIN_GARDEN_B,GPIO.LOW)	
+		# output(1,'off')
+		output(2,'off')
+		output(3,'off')
+		output(4,'off')
 	else:
 		print "Invalid action \"" + action + "\""
-elif (zone == ZONE_LAWN):
-	if (action == ACTION_ON):
-		log("Turning LAWN sprinklers ON")
-		GPIO.output(PIN_LAWN,GPIO.HIGH)
+elif zone in OUTPUT_NUM_MAP:
+	log("Turning " + zone.upper() + " sprinklers " + action.upper())
+	output(OUTPUT_NUM_MAP[zone], action)
 		
-	elif (action == ACTION_OFF):
-		log("Turning LAWN sprinklers OFF")
-		GPIO.output(PIN_LAWN,GPIO.LOW)
-	else:
-		print "Invalid action \"" + action + "\""
 else:
 	# Invalid zone
 	print "Invalid zone \"" + zone + "\""

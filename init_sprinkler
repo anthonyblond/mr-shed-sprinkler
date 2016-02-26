@@ -1,16 +1,11 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as GPIO
+from mr_shed_output import output, init
 import time
 import sys
 import datetime
 import os
 from ConfigParser import SafeConfigParser
-
-# CONSTANTS
-PIN_LAWN = 11
-PIN_GARDEN_A = 13
-PIN_GARDEN_B = 15
 
 # CONFIG
 config = SafeConfigParser()
@@ -27,24 +22,16 @@ def log(msg):
 # RUN-TIME
 ###############
 
-# Avoid warnings 
-GPIO.setwarnings(False)
+log("Initialising sprinkler system")
 
-# to use Raspberry Pi board pin numbers
-GPIO.setmode(GPIO.BOARD)
+init()
 
-log("Initialising sprinkler system");
+# output(1, 'off')
+output(2, 'off')
+output(3, 'off')
+output(4, 'off')
 
-# Set up relevant GPIO channels
-GPIO.setup(PIN_LAWN, GPIO.OUT)
-GPIO.setup(PIN_GARDEN_A, GPIO.OUT)
-GPIO.setup(PIN_GARDEN_B, GPIO.OUT)
-
-GPIO.output(PIN_LAWN,GPIO.LOW);
-GPIO.output(PIN_GARDEN_A,GPIO.LOW);
-GPIO.output(PIN_GARDEN_B,GPIO.LOW);
-
-log("Init complete, everything should be off");
+log("Init complete, everything should be off")
 
 sys.stdout.flush()
 sys.exit(0);
